@@ -91,6 +91,29 @@ function App() {
     }
   }
 
+  const handleTrendingClick = async (movie_id: number) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/movie/${movie_id}`, API_OPTIONS);
+      if (!response.ok) throw new Error('Failed to fetch movie');
+      const data = await response.json();
+
+      const movie: Movie = {
+        id: data.id,
+        title: data.title,
+        vote_average: data.vote_average,
+        poster_path: data.poster_path,
+        release_date: data.release_date,
+        original_language: data.original_language,
+        overview: data.overview,
+        genres: data.genre_ids?.map((id: number) => genres[id]).filter(Boolean) || [],
+      };
+
+      setSelectedMovie(movie);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const loadTrendingMovies = async () => {
     try {
       const dbResults = await getTrendingMovies();
@@ -106,8 +129,6 @@ function App() {
       console.log(error);
     }
   }
-
-
 
   useEffect(() => {
     fetchGenres();
@@ -140,6 +161,7 @@ function App() {
                 <img 
                   src={trendingMovie.poster_url ? `https://image.tmdb.org/t/p/w500/${trendingMovie.poster_url}` : `/No-Poster-y.png`}
                   alt='Poster'
+                  onClick={() => handleTrendingClick(trendingMovie.movie_id)}
                 />
                 <span>{trendingMovie.count} searches</span>
               </li>
@@ -149,7 +171,7 @@ function App() {
         )}
 
         <section className='all-movies'>
-          <h2 className='mt-10'>All Movies</h2>
+          <h2>All Movies</h2>
 
           {isLoading ? (
             <Spinner />

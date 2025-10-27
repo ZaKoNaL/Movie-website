@@ -56,10 +56,10 @@
   }
 
   .trending {
-    @apply mt-20;
+    @apply mt-10;
 
     & ul {
-      @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
+      @apply flex flex-row flex-nowrap overflow-y-auto gap-5 w-full hide-scrollbar;
     }
 
     & ul li {
